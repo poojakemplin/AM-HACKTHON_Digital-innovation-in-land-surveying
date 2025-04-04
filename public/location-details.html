@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Details - Digital Land Records</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .location-details {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .detail-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .detail-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-item h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .detail-item p {
+            color: #666;
+            margin: 0;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .back-button {
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        .not-found {
+            text-align: center;
+            color: #dc3545;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-globe"></i>
+                Digital Land Records
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/land-details">Land Details</a></li>
+                    <li><a href="/gramamitra">GramaMitra</a></li>
+                    <li><a href="/view-map">View Map</a></li>
+                    <li><a href="/feedback">Feedback</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="#" id="logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="location-details">
+        <a href="/dashboard" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Map
+        </a>
+        <div id="content">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        // Location data
+        const locationData = [
+            {
+                id: 1,
+                name: "Gol Gumbaz",
+                surveyNumber: "1",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "10",
+                boundaries: "Fort area, Ibrahim Rauza",
+                topography: "Flat terrain, Large dome"
+            },
+            {
+                id: 2,
+                name: "Ibrahim Rauza",
+                surveyNumber: "2",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "5",
+                boundaries: "Near Gol Gumbaz, Urban region",
+                topography: "Elevated, Garden spaces"
+            },
+            {
+                id: 3,
+                name: "Bijapur Fort",
+                surveyNumber: "3",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "30",
+                boundaries: "City Center, Multiple gates",
+                topography: "Hilly, Fortified walls"
+            },
+            {
+                id: 4,
+                name: "Malik-e-Maidan",
+                surveyNumber: "4",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "2",
+                boundaries: "Inside Bijapur Fort",
+                topography: "Rocky, Large cannon"
+            },
+            {
+                id: 5,
+                name: "Jama Masjid",
+                surveyNumber: "5",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "3",
+                boundaries: "Central Vijayapura, Markets",
+                topography: "Flat, Open courtyard"
+            },
+            {
+                id: 6,
+                name: "Upli Burj",
+                surveyNumber: "6",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "1",
+                boundaries: "Near Bijapur Fort, Residential",
+                topography: "Elevated, Watchtower"
+            },
+            {
+                id: 7,
+                name: "Bara Kaman",
+                surveyNumber: "7",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "2.5",
+                boundaries: "Near Gol Gumbaz",
+                topography: "Flat, Incomplete arches"
+            },
+            {
+                id: 8,
+                name: "Taj Bawdi",
+                surveyNumber: "8",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "4",
+                boundaries: "Fort Area, Old city section",
+                topography: "Large water tank"
+            },
+            {
+                id: 9,
+                name: "Asar Mahal",
+                surveyNumber: "9",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "3.5",
+                boundaries: "Inside Fort Complex",
+                topography: "Elevated, Ornate halls"
+            },
+            {
+                id: 10,
+                name: "Mehtar Mahal",
+                surveyNumber: "10",
+                owner: "Archaeological Survey of India (ASI)",
+                area: "2",
+                boundaries: "Near Jama Masjid",
+                topography: "Flat, Carved gateway"
+            }
+        ];
+
+        // Check login status
+        function checkLoginStatus() {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                window.location.href = '/login';
+            }
+        }
+        checkLoginStatus();
+
+        // Get location ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = parseInt(urlParams.get('id'));
+        console.log('Location ID:', locationId);
+
+        // Find and display location details
+        const location = locationData.find(loc => loc.id === locationId);
+        console.log('Found location:', location);
+
+        if (location) {
+            document.title = location.name + " - Digital Land Records";
+            
+            // Create the content HTML
+            const contentHtml = `
+                <div class="detail-card">
+                    <h2>${location.name}</h2>
+                    <div class="detail-item">
+                        <h3>Survey Number</h3>
+                        <p>${location.surveyNumber}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Owner/Authority</h3>
+                        <p>${location.owner}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Area</h3>
+                        <p>${location.area} Acres</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Boundaries</h3>
+                        <p>${location.boundaries}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Topography</h3>
+                        <p>${location.topography}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('content').innerHTML = contentHtml;
+            console.log('Content updated with location details');
+        } else {
+            document.getElementById('content').innerHTML = `
+                <div class="detail-card">
+                    <div class="not-found">
+                        <h2>Location Not Found</h2>
+                        <p>The requested location could not be found. Please return to the map and try again.</p>
+                    </div>
+                </div>
+            `;
+            console.log('Location not found');
+        }
+
+        // Handle logout
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('username');
+            window.location.href = '/login';
+        });
+    </script>
+</body>
+</html>

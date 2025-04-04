@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramaMitra - Community Forum</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gramamitra-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .create-post {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .post-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            resize: vertical;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .media-upload {
+            display: flex;
+            gap: 12px;
+        }
+
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .posts-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .post-time {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .post-content {
+            margin-bottom: 16px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        .post-actions-bar {
+            display: flex;
+            gap: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .categories-sidebar {
+            position: sticky;
+            top: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-item:hover {
+            color: var(--color-primary);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Digital Innovation in Land Surveying</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/land-details">Land Details</a></li>
+                <li><a href="/gramamitra">GramaMitra</a></li>
+                <li><a href="/view-map">View Map</a></li>
+                <li><a href="/feedback">Feedback</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="gramamitra-container">
+        <div class="create-post">
+            <textarea class="post-input" placeholder="Share your concerns or ask a question..."></textarea>
+            <div class="post-actions">
+                <div class="media-upload">
+                    <label class="upload-btn">
+                        <i class="fas fa-image"></i>
+                        <span>Photo</span>
+                        <input type="file" accept="image/*" style="display: none;">
+                    </label>
+                    <label class="upload-btn">
+                        <i class="fas fa-video"></i>
+                        <span>Video</span>
+                        <input type="file" accept="video/*" style="display: none;">
+                    </label>
+                </div>
+                <button class="btn btn-primary">Post</button>
+            </div>
+        </div>
+
+        <div class="posts-container">
+            <!-- Sample Post -->
+        </div>
+    </main>
+
+    <script>
+        // Load existing posts when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            loadPosts();
+            checkLoginStatus();
+        });
+
+        // Function to load posts
+        function loadPosts() {
+            fetch('/api/posts')
+                .then(response => response.json())
+                .then(posts => {
+                    const postsContainer = document.querySelector('.posts-container');
+                    postsContainer.innerHTML = ''; // Clear existing posts
+                    
+                    posts.forEach(post => {
+                        const postCard = createPostCard(post);
+                        postsContainer.appendChild(postCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading posts:', error);
+                    showNotification('Error loading posts. Please try again.', 'error');
+                });
+        }
+
+        // Function to create a post card
+        function createPostCard(post) {
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            
+            // Format the timestamp
+            const timestamp = new Date(post.timestamp);
+            const timeAgo = getTimeAgo(timestamp);
+            
+            postCard.innerHTML = `
+                <div class="post-header">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="post-meta">
+                        <div class="post-author">${post.author}</div>
+                        <div class="post-time">${timeAgo}</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>${post.content}</p>
+                    ${post.tags.length > 0 ? `
+                        <div class="tags">
+                            ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    ${post.media.map(mediaUrl => `
+                        <img src="${mediaUrl}" alt="Post media" class="post-image">
+                    `).join('')}
+                </div>
+                <div class="post-actions-bar">
+                    <div class="action-btn upvote-btn" data-post-id="${post.id}">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>${post.upvotes} Upvotes</span>
+                    </div>
+                    <div class="action-btn comment-btn" data-post-id="${post.id}">
+                        <i class="fas fa-comment"></i>
+                        <span>${post.comments.length} Comments</span>
+                    </div>
+                    <div class="action-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+                <div class="comments-section" style="display: none;">
+                    <div class="comments-list">
+                        ${post.comments.map(comment => `
+                            <div class="comment">
+                                <div class="comment-author">${comment.author}</div>
+                                <div class="comment-content">${comment.content}</div>
+                                <div class="comment-time">${getTimeAgo(new Date(comment.timestamp))}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="comment-form">
+                        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+                        <button class="btn btn-primary submit-comment" data-post-id="${post.id}">Comment</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners
+            const upvoteBtn = postCard.querySelector('.upvote-btn');
+            upvoteBtn.addEventListener('click', () => handleUpvote(post.id));
+            
+            const commentBtn = postCard.querySelector('.comment-btn');
+            const commentsSection = postCard.querySelector('.comments-section');
+            commentBtn.addEventListener('click', () => {
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            const submitCommentBtn = postCard.querySelector('.submit-comment');
+            const commentInput = postCard.querySelector('.comment-input');
+            submitCommentBtn.addEventListener('click', () => {
+                const content = commentInput.value.trim();
+                if (content) {
+                    handleComment(post.id, content, commentInput);
+                }
+            });
+            
+            return postCard;
+        }
+
+        // Handle file uploads
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    console.log('File selected:', file.name);
+                }
+            });
+        });
+
+        // Handle post creation
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            const content = document.querySelector('.post-input').value.trim();
+            if (content) {
+                const formData = new FormData();
+                formData.append('content', content);
+                
+                // Add any selected files
+                const imageInput = document.querySelector('input[accept="image/*"]');
+                const videoInput = document.querySelector('input[accept="video/*"]');
+                
+                if (imageInput.files.length > 0) {
+                    formData.append('media', imageInput.files[0]);
+                }
+                if (videoInput.files.length > 0) {
+                    formData.append('media', videoInput.files[0]);
+                }
+                
+                fetch('/api/posts', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(post => {
+                    // Clear input
+                    document.querySelector('.post-input').value = '';
+                    imageInput.value = '';
+                    videoInput.value = '';
+                    
+                    // Add new post to top of list
+                    const postCard = createPostCard(post);
+                    document.querySelector('.posts-container').insertBefore(
+                        postCard, 
+                        document.querySelector('.posts-container').firstChild
+                    );
+                    
+                    showNotification('Post created successfully!');
+                })
+                .catch(error => {
+                    console.error('Error creating post:', error);
+                    showNotification('Error creating post. Please try again.', 'error');
+                });
+            }
+        });
+
+        // Handle upvote
+        function handleUpvote(postId) {
+            fetch(`/api/posts/${postId}/upvote`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const upvoteBtn = document.querySelector(`.upvote-btn[data-post-id="${postId}"]`);
+                upvoteBtn.querySelector('span').textContent = `${data.upvotes} Upvotes`;
+            })
+            .catch(error => {
+                console.error('Error upvoting:', error);
+                showNotification('Error upvoting. Please try again.', 'error');
+            });
+        }
+
+        // Handle comment
+        function handleComment(postId, content, inputElement) {
+            fetch(`/api/posts/${postId}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content })
+            })
+            .then(response => response.json())
+            .then(comment => {
+                // Clear input
+                inputElement.value = '';
+                
+                // Add new comment to the list
+                const commentsList = document.querySelector(`[data-post-id="${postId}"]`)
+                    .closest('.post-card')
+                    .querySelector('.comments-list');
+                
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div class="comment-author">${comment.author}</div>
+                    <div class="comment-content">${comment.content}</div>
+                    <div class="comment-time">Just now</div>
+                `;
+                
+                commentsList.appendChild(commentElement);
+                
+                // Update comment count
+                const commentBtn = document.querySelector(`.comment-btn[data-post-id="${postId}"]`);
+                const currentCount = parseInt(commentBtn.querySelector('span').textContent);
+                commentBtn.querySelector('span').textContent = `${currentCount + 1} Comments`;
+            })
+            .catch(error => {
+                console.error('Error commenting:', error);
+                showNotification('Error adding comment. Please try again.', 'error');
+            });
+        }
+
+        // Helper function to format time ago
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            let interval = Math.floor(seconds / 31536000);
+            if (interval > 1) return interval + ' years ago';
+            if (interval === 1) return 'a year ago';
+            
+            interval = Math.floor(seconds / 2592000);
+            if (interval > 1) return interval + ' months ago';
+            if (interval === 1) return 'a month ago';
+            
+            interval = Math.floor(seconds / 86400);
+            if (interval > 1) return interval + ' days ago';
+            if (interval === 1) return 'yesterday';
+            
+            interval = Math.floor(seconds / 3600);
+            if (interval > 1) return interval + ' hours ago';
+            if (interval === 1) return 'an hour ago';
+            
+            interval = Math.floor(seconds / 60);
+            if (interval > 1) return interval + ' minutes ago';
+            if (interval === 1) return 'a minute ago';
+            
+            if (seconds < 10) return 'just now';
+            
+            return Math.floor(seconds) + ' seconds ago';
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" 
+                   style="color: ${type === 'success' ? 'var(--color-primary)' : '#dc3545'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Check login status
+        function checkLoginStatus() {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Handle logout
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('username');
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

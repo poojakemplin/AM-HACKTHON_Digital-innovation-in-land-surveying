@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Survey Number</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .survey-input-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .survey-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .survey-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .survey-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .survey-input:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Dashboard
+        </a>
+        <div class="survey-input-box">
+            <h1>Land Details Search</h1>
+            <button id="showInput" class="survey-button">Enter Your Survey Number</button>
+            <input type="text" id="surveyInput" class="survey-input" placeholder="Enter survey number..." maxlength="20">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showInput').addEventListener('click', function() {
+            const button = this;
+            const input = document.getElementById('surveyInput');
+            
+            if (input.style.display === 'none' || !input.style.display) {
+                input.style.display = 'block';
+                input.focus();
+                button.textContent = 'Search';
+            } else {
+                const surveyNumber = input.value.trim();
+                if (surveyNumber) {
+                    window.location.href = `land-details.html?survey=${encodeURIComponent(surveyNumber)}`;
+                } else {
+                    alert('Please enter a survey number');
+                }
+            }
+        });
+
+        document.getElementById('surveyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const surveyNumber = this.value.trim();
+                if (surveyNumber) {
+                    window.location.href = `land-details.html?survey=${encodeURIComponent(surveyNumber)}`;
+                } else {
+                    alert('Please enter a survey number');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

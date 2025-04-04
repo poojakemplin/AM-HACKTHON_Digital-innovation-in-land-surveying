@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Land View - Digital Land Survey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #scene-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .controls-panel h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar.active {
+            display: flex;
+        }
+
+        .progress-text {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <div class="controls-panel">
+        <h3><i class="fas fa-cube"></i> 3D Controls</h3>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="toggleTerrain()">
+                <i class="fas fa-mountain"></i> Toggle Terrain
+            </button>
+            <button class="btn btn-primary" onclick="toggleBoundaries()">
+                <i class="fas fa-border-all"></i> Toggle Boundaries
+            </button>
+            <button class="btn btn-secondary" onclick="generateReport()">
+                <i class="fas fa-file-pdf"></i> Generate Report
+            </button>
+            <button class="btn btn-secondary" onclick="share3DView()">
+                <i class="fas fa-share-alt"></i> Share View
+            </button>
+        </div>
+    </div>
+
+    <div id="progress-bar" class="progress-bar">
+        <div class="loading-spinner"></div>
+        <span class="progress-text">Processing...</span>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let terrain, boundaries;
+        const urlParams = new URLSearchParams(window.location.search);
+        const surveyData = JSON.parse(decodeURIComponent(urlParams.get('data')));
+
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87ceeb);
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 10);
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+
+            // Controls setup
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Create terrain
+            createTerrain();
+            createBoundaries();
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function createTerrain() {
+            const geometry = new THREE.PlaneGeometry(20, 20, 50, 50);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x90EE90,
+                wireframe: false,
+                side: THREE.DoubleSide
+            });
+
+            // Add random elevation to create terrain effect
+            const vertices = geometry.attributes.position.array;
+            for (let i = 0; i < vertices.length; i += 3) {
+                vertices[i + 2] = Math.random() * 2;
+            }
+
+            terrain = new THREE.Mesh(geometry, material);
+            terrain.rotation.x = -Math.PI / 2;
+            terrain.receiveShadow = true;
+            scene.add(terrain);
+        }
+
+        function createBoundaries() {
+            if (surveyData && surveyData.polygon) {
+                const points = surveyData.polygon.map(coord => {
+                    // Convert coordinates to scene space
+                    return new THREE.Vector3(
+                        (coord.lat - surveyData.location.lat) * 100,
+                        0.5,
+                        (coord.lng - surveyData.location.lng) * 100
+                    );
+                });
+
+                // Create boundary walls
+                const wallGeometry = new THREE.BoxGeometry(0.1, 1, 0.1);
+                const wallMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+                boundaries = new THREE.Group();
+                
+                points.forEach((point, index) => {
+                    const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                    wall.position.set(point.x, point.y, point.z);
+                    boundaries.add(wall);
+
+                    // Create connecting lines
+                    if (index < points.length - 1) {
+                        const nextPoint = points[index + 1];
+                        const lineGeometry = new THREE.BufferGeometry().setFromPoints([point, nextPoint]);
+                        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+                        const line = new THREE.Line(lineGeometry, lineMaterial);
+                        boundaries.add(line);
+                    }
+                });
+
+                // Connect last point to first point
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([points[points.length - 1], points[0]]);
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                boundaries.add(line);
+
+                scene.add(boundaries);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function toggleTerrain() {
+            if (terrain) {
+                terrain.material.wireframe = !terrain.material.wireframe;
+            }
+        }
+
+        function toggleBoundaries() {
+            if (boundaries) {
+                boundaries.visible = !boundaries.visible;
+            }
+        }
+
+        async function generateReport() {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.classList.add('active');
+
+            // Simulate background processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Create report data
+            const reportData = {
+                surveyData: surveyData,
+                timestamp: new Date().toISOString(),
+                viewpoint: {
+                    position: camera.position.toArray(),
+                    rotation: camera.rotation.toArray()
+                }
+            };
+
+            // Create and download the report
+            const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `survey-report-${surveyData.surveyNumber}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            progressBar.classList.remove('active');
+        }
+
+        function share3DView() {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.classList.add('active');
+
+            // Simulate sharing process
+            setTimeout(() => {
+                const shareData = {
+                    title: `Land Survey 3D View - ${surveyData.surveyNumber}`,
+                    text: 'Check out this 3D view of the surveyed land!',
+                    url: window.location.href
+                };
+
+                if (navigator.share) {
+                    navigator.share(shareData)
+                        .catch(err => console.error('Error sharing:', err));
+                } else {
+                    // Fallback for browsers that don't support native sharing
+                    alert('Share link copied to clipboard!');
+                }
+
+                progressBar.classList.remove('active');
+            }, 1000);
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="js/chatbot-loader.js"></script>
+</body>
+</html>

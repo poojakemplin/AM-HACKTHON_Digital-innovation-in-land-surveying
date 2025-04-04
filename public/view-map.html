@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Survey Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.geometryutil"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://source.unsplash.com/1600x900/?nature,land') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px black;
+        }
+        #map {
+            height: 500px;
+            width: 90%;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+        }
+        #map:hover {
+            transform: scale(1.02);
+        }
+        #controls {
+            margin-top: 15px;
+        }
+        button {
+            padding: 12px 18px;
+            margin: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #0096c7);
+            transform: scale(1.05);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: black;
+            text-align: left;
+            font-size: 16px;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>🌍 Interactive Land Survey Map</h2>
+    <div id="map"></div>
+    <div id="controls">
+        <button onclick="resetMarkers()">🔄 Reset Markers</button>
+        <button onclick="resetPolygon()">🔹 Reset Polygon</button>
+        <button onclick="showResult()">📊 Show Result</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var markers = [];
+        var polygon;
+        var areaLabel;
+        var locationName = "";
+        var areaSize = 0;
+
+        function promptForLocationName() {
+            if (!locationName) {
+                locationName = prompt("Enter the name of the area (e.g., Home, School, Village)");
+            }
+        }
+
+        map.on('click', function(e) {
+            promptForLocationName();
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+            var marker = L.marker([lat, lng]).addTo(map);
+            markers.push(marker);
+            if (polygon) map.removeLayer(polygon);
+            if (areaLabel) map.removeLayer(areaLabel);
+            if (markers.length >= 3) {
+                var latlngs = markers.map(m => m.getLatLng());
+                polygon = L.polygon(latlngs, { color: '#00d4ff' }).addTo(map);
+                var area = L.GeometryUtil.geodesicArea(latlngs);
+                areaSize = (area / 10000).toFixed(2);
+                var center = polygon.getBounds().getCenter();
+                areaLabel = L.marker(center, {
+                    icon: L.divIcon({
+                        className: 'area-label',
+                        html: `<b>${locationName}</b><br>Area: ${areaSize} hectares`,
+                        iconSize: [120, 40]
+                    })
+                }).addTo(map);
+            }
+        });
+
+        function resetMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            if (polygon) { map.removeLayer(polygon); polygon = null; }
+            if (areaLabel) { map.removeLayer(areaLabel); areaLabel = null; }
+            locationName = "";
+            areaSize = 0;
+            document.getElementById("result").style.display = "none";
+        }
+
+        function resetPolygon() {
+            if (polygon) { map.removeLayer(polygon); polygon = null; }
+            if (areaLabel) { map.removeLayer(areaLabel); areaLabel = null; }
+            areaSize = 0;
+        }
+
+        function showResult() {
+            if (markers.length < 3) {
+                alert("Please select at least 3 points to form a polygon.");
+                return;
+            }
+            var latlngs = markers.map(m => m.getLatLng());
+            var resultHTML = `<b>📍 Location Name:</b> ${locationName} <br>`;
+            resultHTML += `<b>📏 Total Selected Area:</b> ${areaSize} hectares <br>`;
+            resultHTML += `<b>🗺️ Coordinates:</b> <br>`;
+            latlngs.forEach((point, index) => {
+                resultHTML += `🔹 Point ${index + 1}: Latitude ${point.lat.toFixed(6)}, Longitude ${point.lng.toFixed(6)}<br>`;
+            });
+            document.getElementById("result").innerHTML = resultHTML;
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+</body>
+</html>

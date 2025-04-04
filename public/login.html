@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Digital Land Survey</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+        }
+        .logo i {
+            margin-right: 10px;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .auth-card {
+            background-color:white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 400px;
+            max-width: 100%;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header i {
+            font-size: 48px;
+            color:black;
+            margin-bottom: 15px;
+        }
+        .auth-form {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background:green;
+        }
+        .error-message {
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .error-message.show {
+            opacity: 1;
+        }
+        .error-message.error {
+            color: red;
+        }
+        .error-message.success {
+            color: #4CAF50;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .auth-footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-map-marked-alt"></i>
+                Digital Land Survey
+            </a>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-card animate-fadeInUp">
+            <div class="auth-header">
+                <i class="fas fa-user-circle"></i>
+                <h1 id="authTitle">Login</h1>
+            </div>
+            
+            <form id="authForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="form-group" id="emailGroup" style="display: none;">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control">
+                </div>
+                <button type="submit" class="btn" id="submitButton">Login</button>
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+            
+            <div class="auth-toggle">
+                <span id="toggleText">Don't have an account?</span>
+                <a href="#" id="toggleLink">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoginMode = true;
+
+        function showMessage(message, isSuccess = false) {
+            const messageDiv = document.getElementById('errorMessage');
+            messageDiv.textContent = message;
+            messageDiv.classList.add('show');
+            messageDiv.classList.remove('error', 'success');
+            messageDiv.classList.add(isSuccess ? 'success' : 'error');
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function showError(message) {
+            showMessage(message, false);
+        }
+
+        function showSuccess(message) {
+            showMessage(message, true);
+        }
+
+        function validateEmail(email) {
+            if (!email.endsWith('@gmail.com')) {
+                showError('Please use a valid Gmail address (@gmail.com)');
+                return false;
+            }
+            const localPart = email.split('@')[0];
+            if (!localPart || localPart.length < 1) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+        function validateUsername(username) {
+            // Check if username contains at least 2 numbers
+            const numbers = username.replace(/[^0-9]/g, "");
+            return numbers.length >= 2;
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('authTitle');
+            const submitButton = document.getElementById('submitButton');
+            const toggleText = document.getElementById('toggleText');
+            const toggleLink = document.getElementById('toggleLink');
+            const emailGroup = document.getElementById('emailGroup');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+
+            if (isLoginMode) {
+                title.textContent = 'Login';
+                submitButton.textContent = 'Login';
+                toggleText.textContent = "Don't have an account?";
+                toggleLink.textContent = 'Register';
+                emailGroup.style.display = 'none';
+                confirmPasswordGroup.style.display = 'none';
+                document.getElementById('email').required = false;
+                document.getElementById('confirmPassword').required = false;
+            } else {
+                title.textContent = 'Register';
+                submitButton.textContent = 'Register';
+                toggleText.textContent = 'Already have an account?';
+                toggleLink.textContent = 'Login';
+                emailGroup.style.display = 'block';
+                confirmPasswordGroup.style.display = 'block';
+                document.getElementById('email').required = true;
+                document.getElementById('confirmPassword').required = true;
+            }
+        }
+
+        document.getElementById('toggleLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleAuthMode();
+        });
+
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const isRegistering = document.getElementById('authTitle').textContent === 'Register';
+            
+            // Username validation
+            if (!validateUsername(username)) {
+                showError('Username must contain at least 2 numbers');
+                return;
+            }
+
+            // Email validation (for registration)
+            if (isRegistering && !validateEmail(email)) {
+                return; // validateEmail already shows error message
+            }
+
+            // If validation passes, proceed with form submission
+            const formData = {
+                username: username
+            };
+
+            if (isRegistering) {
+                formData.email = email;
+            }
+
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (isRegistering) {
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return;
+                }
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters long');
+                    return;
+                }
+                formData.password = password;
+            } else {
+                formData.password = password;
+            }
+
+            fetch(isRegistering ? '/api/register' : '/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showError(data.error);
+                } else {
+                    if (isRegistering) {
+                        showSuccess('Registration successful! Please login.');
+                        toggleAuthMode();
+                        // Clear form
+                        e.target.reset();
+                    } else {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('username', data.username);
+                        window.location.href = '/dashboard.html';
+                    }
+                }
+            })
+            .catch(error => {
+                showError('An error occurred. Please try again.');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

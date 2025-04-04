@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Digital Land Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.geometryutil"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: white;
+            text-decoration: none;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .nav-links li {
+            margin-right: 20px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 20px auto;
+            padding: 0 1rem;
+        }
+        .map-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .map-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        #map:hover {
+            transform: scale(1.01);
+        }
+        #controls {
+            margin-top: 15px;
+            text-align: center;
+        }
+        button {
+            padding: 12px 18px;
+            margin: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #0096c7);
+            transform: scale(1.05);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-globe"></i> Digital Land Records
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/land-details">Land Details</a></li>
+                    <li><a href="/gramamitra">GramaMitra</a></li>
+                    <li><a href="/feedback">Feedback</a></li>
+                    <li><a href="#" id="logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="map-section">
+            <h2 class="map-title"><i class="fas fa-map-marker-alt"></i> Interactive Land Survey Map</h2>
+            <div id="map"></div>
+            <div id="controls">
+                <button onclick="resetMarkers()"><i class="fas fa-undo"></i> Reset Markers</button>
+                <button onclick="resetPolygon()"><i class="fas fa-draw-polygon"></i> Reset Polygon</button>
+                <button onclick="showResult()"><i class="fas fa-chart-area"></i> Show Result</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2><i class="fas fa-map-location-dot"></i> Bihar State Land Records</h2>
+            <div class="selection-panel">
+                <div class="selection-container">
+                    <div class="selection-group">
+                        <label for="district">Select District:</label>
+                        <select id="district" class="selection-dropdown">
+                            <option value="">Choose District</option>
+                            <option value="07">07 ARARIA</option>
+                            <option value="23">23 BANKA</option>
+                        </select>
+                    </div>
+                    <div class="selection-group">
+                        <label for="subdivision">Select Sub Division:</label>
+                        <select id="subdivision" class="selection-dropdown">
+                            <option value="">Choose Sub Division</option>
+                            <option value="01">01 ARA SADAR</option>
+                            <option value="02">02 JAGADISHPUR</option>
+                        </select>
+                    </div>
+                    <div class="selection-group">
+                        <label for="circle">Select Circle:</label>
+                        <select id="circle" class="selection-dropdown">
+                            <option value="">Choose Circle</option>
+                            <option value="10">10 Behea</option>
+                            <option value="09">09 jagadishpur</option>
+                        </select>
+                    </div>
+                    <div class="selection-group">
+                        <label for="mauza">Select Mauza:</label>
+                        <select id="mauza" class="selection-dropdown">
+                            <option value="">Choose Mauza</option>
+                            <option value="0688">0688 Aer(290)</option>
+                            <option value="0636">0636 Afzalpur(197)</option>
+                        </select>
+                    </div>
+                    <div class="selection-group">
+                        <label for="survey-type">Select Survey Type:</label>
+                        <select id="survey-type" class="selection-dropdown">
+                            <option value="">Choose Survey Type</option>
+                            <option value="cs">CS Cadastral Survey</option>
+                            <option value="rs">RS Revisional Survey</option>
+                        </select>
+                    </div>
+                    <div class="selection-group">
+                        <label for="map-instance">Select Map Instance:</label>
+                        <select id="map-instance" class="selection-dropdown">
+                            <option value="">Choose Map Instance</option>
+                            <option value="07">07 RS Map</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="viewMapBtn" class="btn btn-primary" style="margin-top: 1rem;">View Selected Map</button>
+                <div id="viewMapContainer" style="display: none; margin-top: 1rem;">
+                    <img id="mapImage" class="map-image" src="" alt="Land Record Map" style="width: 100%; height: auto;">
+                    <div id="mapOverlay" class="map-overlay">
+                        Please select all required options to view the map
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container" style="display: none;">
+        <div class="chatbot-header">
+            <span>Digital Land Assistant</span>
+            <i class="fas fa-times" onclick="toggleChatbot()" style="cursor: pointer;"></i>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <!-- Messages will be added here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="userInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Check login status
+        function checkLoginStatus() {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                window.location.href = '/login';
+            }
+        }
+        checkLoginStatus();
+
+        // Logout handler
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('username');
+            window.location.href = '/login';
+        });
+
+        // Initialize map
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var markers = [];
+        var polygon;
+        var areaLabel;
+        var locationName = "";
+        var areaSize = 0;
+
+        function promptForLocationName() {
+            if (!locationName) {
+                locationName = prompt("Enter the name of the area (e.g., Home, School, Village)");
+            }
+        }
+
+        map.on('click', function(e) {
+            promptForLocationName();
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+            var marker = L.marker([lat, lng]).addTo(map);
+            markers.push(marker);
+            if (polygon) map.removeLayer(polygon);
+            if (areaLabel) map.removeLayer(areaLabel);
+            if (markers.length >= 3) {
+                var latlngs = markers.map(m => m.getLatLng());
+                polygon = L.polygon(latlngs, { color: '#00d4ff' }).addTo(map);
+                var area = L.GeometryUtil.geodesicArea(latlngs);
+                areaSize = (area / 10000).toFixed(2);
+                var center = polygon.getBounds().getCenter();
+                areaLabel = L.marker(center, {
+                    icon: L.divIcon({
+                        className: 'area-label',
+                        html: `<b>${locationName}</b><br>Area: ${areaSize} hectares`,
+                        iconSize: [120, 40]
+                    })
+                }).addTo(map);
+            }
+        });
+
+        function resetMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            if (polygon) { map.removeLayer(polygon); polygon = null; }
+            if (areaLabel) { map.removeLayer(areaLabel); areaLabel = null; }
+            locationName = "";
+            areaSize = 0;
+            document.getElementById("result").style.display = "none";
+        }
+
+        function resetPolygon() {
+            if (polygon) { map.removeLayer(polygon); polygon = null; }
+            if (areaLabel) { map.removeLayer(areaLabel); areaLabel = null; }
+            areaSize = 0;
+        }
+
+        function showResult() {
+            if (markers.length < 3) {
+                alert("Please select at least 3 points to form a polygon.");
+                return;
+            }
+            var latlngs = markers.map(m => m.getLatLng());
+            var resultHTML = `<b>📍 Location Name:</b> ${locationName} <br>`;
+            resultHTML += `<b>📏 Total Selected Area:</b> ${areaSize} hectares <br>`;
+            resultHTML += `<b>🗺️ Coordinates:</b> <br>`;
+            latlngs.forEach((point, index) => {
+                resultHTML += `🔹 Point ${index + 1}: Latitude ${point.lat.toFixed(6)}, Longitude ${point.lng.toFixed(6)}<br>`;
+            });
+            document.getElementById("result").innerHTML = resultHTML;
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+</body>
+</html>

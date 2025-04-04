@@ -1,0 +1,195 @@
+/* Background animations */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    opacity: 0.1;
+}
+
+/* Floating leaves animation */
+.leaf {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234CAF50"><path d="M17,8C8,10,5.9,16.17,3.82,21.34L5.71,22l1-2.3A4.49,4.49,0,0,0,8,20C19,20,22,3,22,3,21,5,14,5.25,9,6.25S2,11.5,2,13.5a6.23,6.23,0,0,0,1.75,3.75C8,13,10,13,22,8Z"/></svg>');
+    background-size: contain;
+    animation: falling linear infinite;
+}
+
+@keyframes falling {
+    0% {
+        transform: translate(0, -100%) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(100px, 1000px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Tractor animation */
+.tractor {
+    position: absolute;
+    bottom: 20px;
+    left: -100px;
+    width: 80px;
+    height: 50px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23F44336"><path d="M5,4V11.5H4C2.89,11.5 2,12.39 2,13.5V16A3,3 0 0,0 5,19A3,3 0 0,0 8,16H10A3,3 0 0,0 13,19A3,3 0 0,0 16,16V11.5L10.5,6L5,4M5,6.5L9,8.25L11,10H5V6.5M5,16A1,1 0 0,1 6,17A1,1 0 0,1 5,18A1,1 0 0,1 4,17A1,1 0 0,1 5,16M13,16A1,1 0 0,1 14,17A1,1 0 0,1 13,18A1,1 0 0,1 12,17A1,1 0 0,1 13,16M8,16H10A3,3 0 0,0 7,13A3,3 0 0,0 4,16H8Z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: moveTractor 20s linear infinite;
+}
+
+@keyframes moveTractor {
+    0% {
+        left: -100px;
+        transform: scaleX(1);
+    }
+    45% {
+        left: 100%;
+        transform: scaleX(1);
+    }
+    50% {
+        left: 100%;
+        transform: scaleX(-1);
+    }
+    95% {
+        left: -100px;
+        transform: scaleX(-1);
+    }
+    100% {
+        left: -100px;
+        transform: scaleX(1);
+    }
+}
+
+/* Growing plant animation */
+.plant {
+    position: absolute;
+    bottom: 20px;
+    width: 30px;
+    height: 30px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234CAF50"><path d="M12,3C12,3 8,6 8,9C8,12 12,15 12,15C12,15 16,12 16,9C16,6 12,3 12,3M11,18V21H13V18H11M7,17L4,20L6,22L9,19L7,17M17,17L15,19L18,22L20,20L17,17Z"/></svg>');
+    background-size: contain;
+    animation: growing 4s ease-out infinite;
+}
+
+@keyframes growing {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    90% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Sun animation */
+.sun {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFC107"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,6.65C6.9,7.16 6.36,7.78 5.94,8.5C5.5,9.24 5.25,10 5.11,10.79L3.34,7M3.36,17L5.12,13.23C5.26,14 5.53,14.78 5.95,15.5C6.37,16.24 6.91,16.86 7.5,17.37L3.36,17M20.65,7L18.88,10.79C18.74,10 18.47,9.23 18.05,8.5C17.63,7.78 17.1,7.15 16.5,6.64L20.65,7M20.64,17L16.5,17.36C17.09,16.85 17.62,16.22 18.04,15.5C18.46,14.77 18.73,14 18.87,13.21L20.64,17M12,22L9.59,18.56C10.33,18.83 11.14,19 12,19C12.82,19 13.63,18.83 14.37,18.56L12,22Z"/></svg>');
+    background-size: contain;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Card animations */
+.detail-card {
+    animation: slideIn 0.5s ease-out;
+    transition: transform 0.3s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-5px);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Search container animation */
+.search-container {
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Map container animation */
+#map {
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background: url('https://www.angrybirdsnest.com/wp-content/uploads/2016/10/angry-birds-background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFloat {
+            0%,
+            100% {
+                background-position: center center;
+            }
+
+            50% {
+                background-position: center 55%;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(231, 60, 60, 0.2);
+            max-width: 600px;
+            margin: auto;
+            animation: containerPop 0.5s ease-out;
+        }
+
+        @keyframes containerPop {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .post {
+            transform-origin: top;
+            animation: postBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes postBounce {
+            0% {
+                transform: translateY(-50px) scale(0.8);
+                opacity: 0;
+            }
+
+            60% {
+                transform: translateY(10px) scale(1.05);
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .btn-action:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .upload-btn {
+            background: linear-gradient(45deg, green, green);
+            box-shadow: 0 4px 15px rgba(231, 60, 60, 0.3);
+            animation: buttonPulse 2s infinite;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @keyframes buttonPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .post-avatar {
+            background: linear-gradient(45deg, green, green);
+            animation: avatarSpin 0.3s ease-out;
+        }
+
+        @keyframes avatarSpin {
+            0% {
+                transform: rotate(-180deg) scale(0);
+            }
+
+            100% {
+                transform: rotate(0) scale(1);
+            }
+        }
+
+        .liked {
+            animation: heartBeat 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+            color: green;
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.4);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .comment {
+            transition: all 0.3s;
+            animation: commentSlide 0.3s ease-out;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        @keyframes commentSlide {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .stories-bar {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .story-circle {
+            min-width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, green, green);
+            padding: 3px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .story-circle:hover {
+            transform: scale(1.1);
+        }
+
+        .story-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .poll {
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffe6f0;
+            border-radius: 10px;
+            animation: pollFadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes pollFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .poll-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .poll-option span {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .poll-option .progress {
+            width: 60%;
+            margin-right: 10px;
+        }
+
+        .poll-button {
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .poll-button:hover {
+            background: #ff3399;
+        }
+
+        .likes,
+        .comments {
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .likes:hover,
+        .comments:hover {
+            transform: scale(1.2);
+        }
+
+        .post {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .post img, .post video {
+            max-width: 100%;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .badge {
+            margin-right: 5px;
+        }
+
+        /* Navigation bar */
+        .nav-bar {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-bar a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+
+        .nav-bar a:hover {
+            color: #e73c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <a href="/dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <h2><i class="fas fa-feather"></i> VILLAGE PLANNING PLATFORM</h2>
+        <div class="stories-bar">
+            <div class="story-circle" onclick="showPostForm()">
+                <div class="story-content">
+                    <i class="fas fa-plus" style="color: #e73c3c;"></i>
+                </div>
+            </div>
+            <div class="story-circle" onclick="showContacts()">
+                <div class="story-content">
+                    <i class="fas fa-address-book" style="color: #e73c3c;"></i>
+                </div>
+            </div>
+            <div class="story-circle" onclick="showLocation()">
+                <div class="story-content">
+                    <i class="fas fa-map-marker-alt" style="color: #e73c3c;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="postForm" style="display: none;">
+            <input type="text" class="form-control mb-3" id="userNameInput" placeholder="Enter your name">
+            <input type="text" class="form-control mb-3" id="userInput" placeholder="What's on your mind?">
+            <input type="text" class="form-control mb-3" id="tagsInput" placeholder="Tag people (e.g., @john @jane)">
+            <input type="text" class="form-control mb-3" id="locationInput" placeholder="Enter your location">
+            <div class="d-flex justify-content-between align-items-center">
+                <label for="fileInput" class="upload-btn">
+                    <i class="fas fa-camera"></i> Add Photo/Video
+                </label>
+                <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;">
+                <button class="upload-btn" onclick="postMessage()">
+                    <i class="fas fa-paper-plane"></i> Share
+                </button>
+            </div>
+        </div>
+        <div id="contacts" style="display: none;">
+            <p><i class="fas fa-address-book"></i> Village Contacts:</p>
+            <ul class="list-group">
+                <li class="list-group-item">Village Head: +91 9876543210</li>
+                <li class="list-group-item">Community Center: +91 9876543211</li>
+                <li class="list-group-item">Local Police: +91 9876543212</li>
+                <li class="list-group-item">Healthcare Center: +91 9876543213</li>
+            </ul>
+        </div>
+        <div id="location" style="display: none;">
+            <p><i class="fas fa-map-marker-alt"></i> Village Location Map</p>
+            <div style="background: #eee; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                Map will be integrated here
+            </div>
+        </div>
+        <div id="posts"></div>
+    </div>
+
+    <script>
+        const posts = [];
+
+        function showPostForm() {
+            document.getElementById('postForm').style.display = 'block';
+            document.getElementById('contacts').style.display = 'none';
+            document.getElementById('location').style.display = 'none';
+        }
+
+        function showContacts() {
+            document.getElementById('postForm').style.display = 'none';
+            document.getElementById('contacts').style.display = 'block';
+            document.getElementById('location').style.display = 'none';
+        }
+
+        function showLocation() {
+            document.getElementById('postForm').style.display = 'none';
+            document.getElementById('contacts').style.display = 'none';
+            document.getElementById('location').style.display = 'block';
+        }
+
+        function postMessage() {
+            const userName = document.getElementById('userNameInput').value;
+            const input = document.getElementById('userInput').value;
+            const tags = document.getElementById('tagsInput').value.split(' ').filter(tag => tag.startsWith('@'));
+            const location = document.getElementById('locationInput').value;
+            const fileInput = document.getElementById('fileInput').files[0];
+
+            if (!userName || !input && !fileInput) {
+                alert('Please enter your name and a message or add a photo/video!');
+                return;
+            }
+
+            const newPost = {
+                user: userName,
+                content: input,
+                tags: tags,
+                location: location,
+                file: fileInput ? URL.createObjectURL(fileInput) : null,
+                fileType: fileInput ? fileInput.type : null,
+                likes: 0,
+                liked: false,
+                comments: [],
+                poll: {
+                    options: ["Agree", "Disagree", "Neutral"],
+                    votes: [0, 0, 0]
+                }
+            };
+
+            posts.unshift(newPost);
+            document.getElementById('userNameInput').value = '';
+            document.getElementById('userInput').value = '';
+            document.getElementById('tagsInput').value = '';
+            document.getElementById('locationInput').value = '';
+            document.getElementById('fileInput').value = '';
+            displayPosts();
+        }
+
+        function likePost(index) {
+            const post = posts[index];
+            post.liked = !post.liked;
+            post.likes += post.liked ? 1 : -1;
+            displayPosts();
+        }
+
+        function commentPost(index) {
+            const comment = prompt('Add a comment:');
+            if (comment && comment.trim()) {
+                posts[index].comments.push(comment);
+                displayPosts();
+            }
+        }
+
+        function votePoll(postIndex, optionIndex) {
+            posts[postIndex].poll.votes[optionIndex]++;
+            displayPosts();
+        }
+
+        function displayPosts() {
+            const postsDiv = document.getElementById('posts');
+            postsDiv.innerHTML = '';
+            posts.forEach((post, index) => {
+                const totalVotes = post.poll.votes.reduce((a, b) => a + b, 0);
+                const pollHtml = post.poll.options.map((option, i) => `
+                    <div class="poll-option">
+                        <button class="poll-button" onclick="votePoll(${index}, ${i})">${option}</button>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: ${totalVotes ? (post.poll.votes[i] / totalVotes) * 100 : 0}%" aria-valuenow="${post.poll.votes[i]}" aria-valuemin="0" aria-valuemax="${totalVotes}"></div>
+                        </div>
+                        <span>${post.poll.votes[i]}</span>
+                    </div>
+                `).join('');
+
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `
+                    <p><strong>${post.user}</strong> from <em>${post.location}</em></p>
+                    <p>${post.content}</p>
+                    ${post.file ? (post.fileType.startsWith('image') ? `<img src="${post.file}" alt="Post Image">` : `<video src="${post.file}" controls></video>`) : ''}
+                    <p>${post.tags.map(tag => `<span class="badge badge-primary">${tag}</span>`).join(' ')}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="likes ${post.liked ? 'liked' : ''}" onclick="likePost(${index})">
+                            <i class="fas fa-heart"></i> ${post.likes}
+                        </span>
+                        <span class="comments" onclick="commentPost(${index})">
+                            <i class="fas fa-comment"></i> ${post.comments.length}
+                        </span>
+                    </div>
+                    <div>
+                        ${post.comments.map(comment => `<p class="comment">${comment}</p>`).join('')}
+                    </div>
+                    <div class="poll">
+                        ${pollHtml}
+                    </div>
+                `;
+                postsDiv.appendChild(postDiv);
+            });
+        }
+
+        // Add event listener for Enter key
+        document.getElementById('userNameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                postMessage();
+            }
+        });
+
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                postMessage();
+            }
+        });
+
+        document.getElementById('tagsInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                postMessage();
+            }
+        });
+
+        // Initialize empty posts display
+        displayPosts();
+    </script>
+</body>
+
+</html>
