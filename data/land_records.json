@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Survey No. 123/A",
+    "details": "Agricultural land in North Vijayapur",
+    "location": "North Vijayapur",
+    "area": "5 acres"
+  },
+  {
+    "title": "Plot No. 45B",
+    "details": "Residential plot in Central Vijayapur",
+    "location": "Central Vijayapur",
+    "area": "2400 sq ft"
+  },
+  {
+    "title": "Commercial Plot 78",
+    "details": "Commercial property near Vijayapur Bus Stand",
+    "location": "Bus Stand Area",
+    "area": "1200 sq ft"
+  }
+]

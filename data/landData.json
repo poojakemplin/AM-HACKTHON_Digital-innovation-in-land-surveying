@@ -1,0 +1,208 @@
+{
+  "surveys": [
+    {
+      "surveyNumber": "1234",
+      "ownerName": "Ramesh Kumar",
+      "location": "Plot 1, Sector A",
+      "area": 2.5,
+      "coordinates": "16.8302° N, 75.7100° E",
+      "boundaries": {
+        "north": "100m",
+        "south": "150m",
+        "east": "200m",
+        "west": "250m"
+      },
+      "topography": "Flat",
+      "infrastructure": "1 km from NH-52, Water Supply",
+      "surveyDate": "22/03/2025",
+      "surveyMethod": "GPS & Drone Mapping"
+    },
+    {
+      "surveyNumber": "5678",
+      "ownerName": "Suresh Patil",
+      "location": "Plot 2, Sector B",
+      "area": 3.0,
+      "coordinates": "16.8325° N, 75.7122° E",
+      "boundaries": {
+        "north": "120m",
+        "south": "180m",
+        "east": "220m",
+        "west": "280m"
+      },
+      "topography": "Sloping",
+      "infrastructure": "Near Railway Station (2 km)",
+      "surveyDate": "22/03/2025",
+      "surveyMethod": "Total Station Survey"
+    },
+    {
+      "surveyNumber": "9012",
+      "ownerName": "Rajesh Singh",
+      "location": "Plot 3, Sector C",
+      "area": 2.2,
+      "coordinates": "16.8350° N, 75.7150° E",
+      "boundaries": {
+        "north": "110m",
+        "south": "160m",
+        "east": "210m",
+        "west": "260m"
+      },
+      "topography": "Undulating",
+      "infrastructure": "Hospital Nearby (1.5 km)",
+      "surveyDate": "21/03/2025",
+      "surveyMethod": "Satellite Mapping"
+    },
+    {
+      "surveyNumber": "3456",
+      "ownerName": "Priya Sharma",
+      "location": "Plot 4, Sector D",
+      "area": 4.0,
+      "coordinates": "16.8375° N, 75.7175° E",
+      "boundaries": {
+        "north": "130m",
+        "south": "170m",
+        "east": "230m",
+        "west": "270m"
+      },
+      "topography": "Flat with gentle slope",
+      "infrastructure": "School within 500m, Underground water",
+      "surveyDate": "23/03/2025",
+      "surveyMethod": "Digital Survey"
+    },
+    {
+      "surveyNumber": "7890",
+      "ownerName": "Arun Verma",
+      "location": "Plot 5, Sector E",
+      "area": 3.5,
+      "coordinates": "16.8400° N, 75.7200° E",
+      "boundaries": {
+        "north": "140m",
+        "south": "190m",
+        "east": "240m",
+        "west": "290m"
+      },
+      "topography": "Terraced",
+      "infrastructure": "Market within 1km, Electricity substation",
+      "surveyDate": "23/03/2025",
+      "surveyMethod": "GPS Survey"
+    },
+    {
+      "surveyNumber": "2345",
+      "ownerName": "Meera Patel",
+      "location": "Plot 6, Sector F",
+      "area": 2.8,
+      "coordinates": "16.8425° N, 75.7225° E",
+      "boundaries": {
+        "north": "115m",
+        "south": "165m",
+        "east": "215m",
+        "west": "265m"
+      },
+      "topography": "Flat",
+      "infrastructure": "Bus stop nearby, Solar power ready",
+      "surveyDate": "23/03/2025",
+      "surveyMethod": "Digital Survey"
+    },
+    {
+      "surveyNumber": "6789",
+      "ownerName": "Kiran Reddy",
+      "location": "Plot 7, Sector G",
+      "area": 3.2,
+      "coordinates": "16.8450° N, 75.7250° E",
+      "boundaries": {
+        "north": "125m",
+        "south": "175m",
+        "east": "225m",
+        "west": "275m"
+      },
+      "topography": "Rolling terrain",
+      "infrastructure": "Community center, Park adjacent",
+      "surveyDate": "23/03/2025",
+      "surveyMethod": "Drone Survey"
+    },
+    {
+      "surveyNumber": "1111",
+      "ownerName": "Kumar",
+      "location": "Vijayapura, Plot 5",
+      "area": 2.8,
+      "coordinates": "16.8405° N, 75.7202° E",
+      "boundaries": {
+        "north": "130m",
+        "south": "190m",
+        "east": "240m",
+        "west": "290m"
+      },
+      "topography": "Flat",
+      "infrastructure": "Agricultural Land Nearby",
+      "surveyDate": "19/03/2025",
+      "surveyMethod": "Total Station Survey"
+    },
+    {
+      "surveyNumber": "2222",
+      "ownerName": "Prakash",
+      "location": "Vijayapura, Plot 7",
+      "area": 1.9,
+      "coordinates": "16.8503° N, 75.7251° E",
+      "boundaries": {
+        "north": "95m",
+        "south": "145m",
+        "east": "195m",
+        "west": "245m"
+      },
+      "topography": "Flat",
+      "infrastructure": "Highway Access (1 km)",
+      "surveyDate": "17/03/2025",
+      "surveyMethod": "GPS Mapping"
+    },
+    {
+      "surveyNumber": "3333",
+      "ownerName": "Sanjay",
+      "location": "Vijayapura, Plot 8",
+      "area": 3.7,
+      "coordinates": "16.8531° N, 75.7283° E",
+      "boundaries": {
+        "north": "135m",
+        "south": "185m",
+        "east": "235m",
+        "west": "285m"
+      },
+      "topography": "Sloping",
+      "infrastructure": "Close to Market Area (3 km)",
+      "surveyDate": "16/03/2025",
+      "surveyMethod": "Total Station Survey"
+    },
+    {
+      "surveyNumber": "4444",
+      "ownerName": "Vikram",
+      "location": "Vijayapura, Plot 9",
+      "area": 2.6,
+      "coordinates": "16.8557° N, 75.7309° E",
+      "boundaries": {
+        "north": "105m",
+        "south": "155m",
+        "east": "205m",
+        "west": "255m"
+      },
+      "topography": "Undulating",
+      "infrastructure": "2.5 km from Bus Station",
+      "surveyDate": "15/03/2025",
+      "surveyMethod": "Theodolite Mapping"
+    },
+    {
+      "surveyNumber": "5555",
+      "ownerName": "Govind",
+      "location": "Vijayapura, Plot 10",
+      "area": 3.1,
+      "coordinates": "16.8600° N, 75.7350° E",
+      "boundaries": {
+        "north": "115m",
+        "south": "165m",
+        "east": "215m",
+        "west": "265m"
+      },
+      "topography": "Hilly",
+      "infrastructure": "Near Water Reservoir (4 km)",
+      "surveyDate": "14/03/2025",
+      "surveyMethod": "Total Station Survey"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "username": "Pooja",
+      "email": "poojakemplingannavar@gmail.com",
+      "password": "pooja123"
+    },
+    {
+      "username": "preeti",
+      "email": "poojakemplingannavar@gmail.com",
+      "password": "pooja1234"
+    },
+    {
+      "username": "pooja",
+      "email": "pooja@gmail.com",
+      "password": "pooja123"
+    },
+    {
+      "username": "poojaa",
+      "email": "poojaa@gmail.com",
+      "password": "$2b$10$PkKG5Q7IAsNXl8OIKgVEOO9nKBRwUiW/WIxmg8mrHYIeiix3sHHRK"
+    },
+    {
+      "username": "swati",
+      "email": "swati@gmail.com",
+      "password": "$2b$10$zP8KJA41lYELV8/reinaC.mVxODa5BJyW.JDEqSETITM.IdIVspRi"
+    },
+    {
+      "username": "harshavardhan Dathe",
+      "email": "harrshavardhandathe@gmail.com",
+      "password": "$2b$10$grNb4F4EbuYrAOC0IeWZYORuzZChJzBKhAQJyrPC3cryTmsENemm2"
+    },
+    {
+      "username": "demo",
+      "email": "abc89@0",
+      "password": "$2b$10$KDWp7f/R6e2fVxUqC0Cr1OVGvexj71r1jzZaRGlLrCGIlvJZnWLSC"
+    },
+    {
+      "username": "megha",
+      "email": "megha@gmail.com",
+      "password": "$2b$10$1tQJm1ypSUNxWXqU7t98FOsAimWPMpLrLRbxuHFxYGEQbZYhsWObO"
+    },
+    {
+      "username": "swati12",
+      "email": "swati12@gmail.com",
+      "password": "$2b$10$xHA4D7qXA0JvFgFNEohwOe3Wi/zcBff1qItlfE8n12Fc4Z05bOwq6"
+    },
+    {
+      "username": "abc12",
+      "email": "abc@gmail.com",
+      "password": "$2b$10$5E0Q/NeZZHXNPw68rtzceOtmA9K3ygoLOlHyRghlvaRHAh0DKg2Mq"
+    },
+    {
+      "username": "def12",
+      "email": "def@gmail.com",
+      "password": "$2b$10$VGqr1x53I3pJEedlLeK/FuNyshw4rLgv65JE4IK08XqpcgmYZ8jE6"
+    },
+    {
+      "username": "aaa123",
+      "email": "aaa@gmail.com",
+      "password": "$2b$10$3MAxoG1MhmRtaPelGtezeO0dny9NB.GiUPMET7U19Ty/KJSkTbqYS"
+    }
+  ]
+}
